@@ -39,7 +39,7 @@
     width:100%;max-width:440px;min-height:100vh;
     background:var(--bg);position:relative;
     display:flex;flex-direction:column;
-    padding-bottom:104px;            /* room for bottom nav */
+    padding-bottom:132px;            /* room for bottom nav + FAB */
   }
 
   /* ===== Header ===== */
@@ -146,9 +146,10 @@
 
   .save{width:100%;border:none;border-radius:16px;background:var(--blue);color:#fff;
     font-size:16px;font-weight:800;padding:16px;cursor:pointer;margin-top:4px;
-    box-shadow:0 6px 16px rgba(59,91,219,.28);transition:.12s}
+    box-shadow:0 6px 16px rgba(59,91,219,.28);transition:.12s;position:relative;z-index:45}
   .save:active{transform:translateY(1px)}
   .save:disabled{background:#c4cbd6;box-shadow:none;cursor:default}
+  .savehint{text-align:center;font-size:12.5px;color:#9aa0ab;font-weight:700;margin:10px 2px 0}
 
   /* ===== Weekly chart (section 2) ===== */
   .weekwrap{padding-top:4px}
@@ -380,7 +381,8 @@
       </div>
 
       <button class="save" id="saveBtn" disabled>今の気分を記録</button>
-      <div style="height:8px"></div>
+      <p class="savehint" id="saveHint">まず上の「今の気分」を選んでください</p>
+      <div style="height:20px"></div>
     </section>
 
     <!-- ============ GRAPH ============ -->
@@ -641,7 +643,8 @@ setTod(_h<11?'morning':(_h<17?'day':'night'));   // auto-pick by current time
 
 /* ---------- save ---------- */
 const saveBtn=document.getElementById('saveBtn');
-function checkSave(){saveBtn.disabled = selMood===null;}
+function checkSave(){const none=(selMood===null);saveBtn.disabled=none;
+  const hint=document.getElementById('saveHint');if(hint)hint.style.display=none?'block':'none';}
 saveBtn.onclick=()=>{
   if(selMood===null)return;
   const todEl=document.querySelector('#tod [aria-pressed="true"]');
@@ -1060,6 +1063,7 @@ document.getElementById('dateInput').onchange=function(){if(this.value)setDate(t
 /* ---------- initial render (data → all views) ---------- */
 refreshAll();
 setDate(selDate);
+checkSave();
 
 /* start on the record screen (the ESM survey is the core) */
 go('record');
