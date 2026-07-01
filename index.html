@@ -46,22 +46,22 @@
   header{
     position:sticky;top:0;z-index:30;
     background:linear-gradient(180deg,#eef2ff 0%,#e9f0ff 100%);
-    padding:14px 18px 13px;
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 12px 11px;
+    display:flex;align-items:center;justify-content:space-between;gap:6px;
     border-bottom:1px solid #e3e9f7;
   }
-  .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:21px;letter-spacing:.01em}
-  .brand .leaf{font-size:20px}
-  .datebar{display:flex;align-items:center;gap:6px}
+  .brand{display:flex;align-items:center;gap:6px;font-weight:800;font-size:clamp(16px,4.2vw,19px);letter-spacing:.01em;white-space:nowrap;line-height:1;flex:1 1 auto;min-width:0}
+  .brand .leaf{font-size:18px;flex:none}
+  .datebar{display:flex;align-items:center;gap:5px;flex:0 0 auto}
   .datebar button{
-    width:40px;height:40px;border:none;border-radius:13px;background:#fff;
-    color:var(--blue);font-size:18px;cursor:pointer;box-shadow:var(--shadow-sm);
+    width:34px;height:34px;border:none;border-radius:11px;background:#fff;
+    color:var(--blue);font-size:17px;cursor:pointer;box-shadow:var(--shadow-sm);
     display:grid;place-items:center;
   }
   .datebar button.ghost{background:transparent;box-shadow:none;color:#9fb0e6}
   .datepill{
-    background:#fff;border-radius:13px;padding:9px 16px;font-weight:700;font-size:15px;
-    box-shadow:var(--shadow-sm);min-width:118px;text-align:center;position:relative;cursor:pointer}
+    background:#fff;border-radius:11px;padding:8px 10px;font-weight:700;font-size:13px;
+    box-shadow:var(--shadow-sm);min-width:92px;text-align:center;position:relative;cursor:pointer}
   .datepill input[type=date]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0}
   .recdate{display:inline-flex;align-items:center;gap:6px;background:var(--blue-soft);color:var(--blue);
     font-size:13px;font-weight:800;border-radius:999px;padding:7px 14px;margin:0 2px 16px}
@@ -258,6 +258,20 @@
   .hrow .htag{font-size:10.5px;background:#eef1f6;color:#6b7280;border-radius:999px;padding:2px 8px;font-weight:700}
   .histhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
   .histhead small{font-size:12px;color:var(--muted);font-weight:700}
+  .hrow .hactions{display:flex;gap:6px;flex:none}
+  .hbtn{border:none;border-radius:10px;padding:8px 10px;font-size:12px;font-weight:800;cursor:pointer;background:#eef2ff;color:var(--blue)}
+  .hbtn.del{background:#f6eaea;color:#c65a5a}
+  .emptyhist{background:#fafbfc;border-radius:16px;padding:18px;color:var(--muted);font-size:13px;line-height:1.7}
+  .editgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow:auto;padding-right:2px}
+  .editgrid label,.editlabel{font-size:12px;color:var(--muted);font-weight:800;display:flex;flex-direction:column;gap:5px}
+  .editgrid input,.editgrid select,#editModal textarea{border:1.5px solid var(--line);border-radius:12px;padding:10px 11px;font:inherit;font-size:14px;color:var(--ink);background:#fff}
+  #editModal textarea{min-height:78px;flex:initial;font-family:inherit;resize:vertical}
+  .editcheck{flex-direction:row!important;align-items:center;gap:8px;background:#fafbfc;border-radius:12px;padding:10px 11px;color:#4b5563}
+  .editcheck input{width:auto;padding:0}
+  .editActions{display:flex;gap:10px;align-items:center}
+  .editActions .save{margin-top:0;flex:1}
+  .editDelete{border:none;border-radius:16px;background:#f4e5e5;color:#bc5555;font-size:15px;font-weight:800;padding:15px 18px;cursor:pointer}
+  @media (max-width:360px){.editgrid{grid-template-columns:1fr}.hrow{align-items:flex-start}.hrow .hactions{flex-direction:column}}
 
   /* ===== Export buttons + data modal ===== */
   .exp{display:block;width:100%;text-align:left;border:1.5px solid var(--line);background:#fff;
@@ -580,6 +594,28 @@
       <button class="save" id="modalCopy">コピーする</button>
     </div>
   </div>
+
+  <div class="modal" id="editModal">
+    <div class="sheet">
+      <div class="mhead"><b>記録を修正</b><button id="editClose" aria-label="閉じる">×</button></div>
+      <input type="hidden" id="editId">
+      <div class="editgrid">
+        <label>日付<input type="date" id="editDate"></label>
+        <label>時刻<input type="time" id="editTime"></label>
+        <label>時間帯<select id="editTod"><option value="morning">朝</option><option value="day">日中</option><option value="night">夜</option></select></label>
+        <label>気分<select id="editMood"><option value="1">1 とてもつらい</option><option value="2">2 つらい</option><option value="3">3 少し落ち込む</option><option value="4">4 どちらでもない</option><option value="5">5 少しよい</option><option value="6">6 よい</option><option value="7">7 とてもよい</option></select></label>
+        <label>エネルギー<select id="editEnergy"><option value="">未選択</option><option value="1">1 ぐったり</option><option value="2">2 少なめ</option><option value="3">3 ふつう</option><option value="4">4 元気</option><option value="5">5 満タン</option></select></label>
+        <label>疲労度<select id="editFatigue"><option value="">未選択</option><option value="1">1 元気</option><option value="2">2 まあ元気</option><option value="3">3 ふつう</option><option value="4">4 疲れた</option><option value="5">5 ヘトヘト</option></select></label>
+        <label>寝た時間<input type="time" id="editSleepTime"></label>
+        <label>起きた時間<input type="time" id="editWakeTime"></label>
+        <label class="editcheck"><input type="checkbox" id="editExercise"> 運動した</label>
+        <label class="editcheck"><input type="checkbox" id="editAlcohol"> お酒を飲んだ</label>
+        <label class="editcheck"><input type="checkbox" id="editGame"> ゲームをした</label>
+      </div>
+      <label class="editlabel">ひとことメモ<textarea id="editMemo" rows="3" placeholder="気づいたこと、きっかけなど"></textarea></label>
+      <div class="editActions"><button class="editDelete" id="editDelete">削除</button><button class="save" id="editSave">保存する</button></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -721,7 +757,7 @@ saveBtn.onclick=()=>{
    sandboxed previews. Records flow: 記録 → store → グラフ/履歴/ホーム.
 =================================================================== */
 const clamp=v=>Math.max(1,Math.min(7,v));
-const mean=a=>a.reduce((s,x)=>s+x,0)/a.length;
+const mean=a=>(a&&a.length)?a.reduce((s,x)=>s+x,0)/a.length:0;
 const DOWJ=['日','月','火','水','木','金','土'];
 const DIARIES=['ラーメン食べすぎたけど満足','久しぶりによく眠れた','仕事が立て込んでバタバタ',
   '散歩して気分転換できた','ちょっと疲れ気味かも','友だちと話せてうれしい','なんとなく低調な一日',
@@ -743,34 +779,10 @@ const Store=(()=>{
       return (k in mem)?mem[k]:def;},
     set(k,v){try{if(ok){localStorage.setItem(k,JSON.stringify(v));return;}}catch(e){}mem[k]=v;}};
 })();
-const REC_KEY='kokoro_records_v2';
-
-function seedRecords(){           // first run only: ~30 days of demo check-ins
-  const out=[];let id=1;
-  for(let i=29;i>=0;i--){
-    const d=new Date(END);d.setDate(END.getDate()-i);const t=29-i;
-    const bm=Math.max(1,Math.min(7,3.2+t*0.085+(sd(t)*1.8-0.9)));
-    const be=Math.max(1,Math.min(5,2.4+t*0.045+(sd(t+50)*1.6-0.8)));
-    const n=2+Math.round(sd(t+90)*3);const date=ymd(d);
-    for(let k=0;k<n;k++){
-      const morning=(k===0),night=(k===n-1);
-      const tod=morning?'morning':(night?'night':'day');
-      const rec={id:id++,ts:d.getTime()+k*5400000,date,
-        mood:clamp(Math.round(bm+(sd(t*10+k)*1.4-0.7))),
-        energy:Math.max(1,Math.min(5,Math.round(be+(sd(t*7+k)*1.2-0.6)))),
-        activity:[],company:[],memo:night?DIARIES[t%DIARIES.length]:'',tod};
-      if(morning){                       // onset ~22.4–24.4, wake ~6.2–7.9
-        rec.sleepTime=hm(23+(sd(t+20)*2-0.6));rec.wakeTime=hm(6.7+(sd(t+30)*1.7-0.5));rec.beforeBed=[];
-      }
-      if(night){rec.fatigue=Math.max(1,Math.min(5,Math.round(2+sd(t+11)*3)));
-        rec.ex=sd(t+5)>0.5;rec.al=sd(t+9)>0.7;rec.game=sd(t+3)>0.55;}
-      out.push(rec);
-    }
-  }
-  return out;
-}
-let records=Store.get(REC_KEY,null);
-if(!records){records=seedRecords();Store.set(REC_KEY,records);}
+const REC_KEY='kokoro_records_v3';
+let records=Store.get(REC_KEY,[]);
+if(!Array.isArray(records)) records=[];
+records=records.map((r,i)=>{ if(r.id==null) r.id=(Date.now()+i); return r; });
 function saveRecords(){Store.set(REC_KEY,records);}
 
 function dailyAgg(){               // group records → one summary per day
@@ -805,6 +817,17 @@ function drawTrend(n){
   const slice=DAYS.slice(-n);
   const moods=slice.map(d=>d.mood);
   const N=moods.length;
+
+  if(N===0){
+    const fr=document.getElementById('weekFaces'); if(fr){fr.style.display='none';fr.innerHTML='';}
+    const wc=document.getElementById('weekChart'); if(wc)wc.innerHTML='<div class="emptyhist">まだグラフにできる記録がありません。まず1回記録すると、ここに推移が表示されます。</div>';
+    const xl=document.getElementById('xlab'); if(xl)xl.innerHTML='';
+    const setText=(id,v)=>{const el=document.getElementById(id); if(el)el.textContent=v;};
+    setText('stAvg','–'); setText('stEn','–'); setText('stDays','0'); setText('stTrend','–');
+    setText('trendTip','記録なし'); setText('insightT','観察中です'); setText('insightS','記録がたまると傾向が表示されます。');
+    renderSleep([]);
+    return;
+  }
 
   // faces row only for the 7-day view
   const fr=document.getElementById('weekFaces');
@@ -916,28 +939,85 @@ function buildCalendar(){
   }
   const avg=cnt?sum/cnt:0;
   document.getElementById('avgVal').textContent=avg.toFixed(1);
-  document.getElementById('avgFace').innerHTML=face(clamp(Math.round(avg)),MOODS[clamp(Math.round(avg))-1].c);
+  {const avglv=cnt?clamp(Math.round(avg)):4;document.getElementById('avgFace').innerHTML=face(avglv,MOODS[avglv-1].c);}
 }
 
 /* ===================================================================
-   HISTORY — daily summary + one-line diary
+   HISTORY — editable individual records
 =================================================================== */
+function escapeHtml(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function timeFromTs(ts){const d=new Date(ts||Date.now());return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function todLabel(t){return t==='morning'?'朝':(t==='night'?'夜':'日中');}
 function buildHistory(){
   const list=document.getElementById('histList');
-  const recent=DAYS.slice(-14).reverse();
-  list.innerHTML=recent.map(d=>{
-    const lv=clamp(Math.round(d.mood));
-    const tags=['記録'+d.records+'回'];
-    if(d.ex)tags.push('🏃 運動');if(d.al)tags.push('🍶 お酒');if(d.game)tags.push('🎮 ゲーム');
-    const md=(d.d.getMonth()+1)+'/'+String(d.d.getDate()).padStart(2,'0');
-    const en=d.energy!=null?d.energy.toFixed(1):'–';
-    const sleep=d.sleepDur!=null?'<div class="hsleep">😴 '+d.sleepDur.toFixed(1)+'h ・ 🕒 中央 '+hm(d.sleepMid)+'</div>':'';
-    return '<div class="hrow"><div class="hface">'+face(lv,MOODS[lv-1].c)+'</div>'+
-      '<div class="hmid"><div class="hd">'+md+'（'+d.dow+'）'+
-      '<span class="sc">きぶん '+d.mood.toFixed(1)+'・エネ '+en+'</span></div>'+
-      (d.diary?'<div class="hdiary">「'+d.diary+'」</div>':'')+sleep+
-      '<div class="htags">'+tags.map(t=>'<span class="htag">'+t+'</span>').join('')+'</div></div></div>';
+  const countEl=document.getElementById('histCount');
+  const recent=records.slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,30);
+  if(countEl)countEl.textContent=records.length?'直近30件':'記録なし';
+  if(!recent.length){
+    list.innerHTML='<div class="emptyhist">まだ記録がありません。ホームまたは中央の「記録」から、最初の記録を追加できます。</div>';
+    return;
+  }
+  list.innerHTML=recent.map(r=>{
+    const lv=clamp(Number(r.mood)||4);
+    const d=new Date((r.date||TODAY)+'T00:00:00');
+    const md=(d.getMonth()+1)+'/'+String(d.getDate()).padStart(2,'0');
+    const en=r.energy!=null?'・エネ '+r.energy:'';
+    const fat=r.fatigue!=null?'・疲労 '+r.fatigue:'';
+    const sleep=(r.sleepTime&&r.wakeTime)?'<div class="hsleep">😴 '+escapeHtml(r.sleepTime)+' → '+escapeHtml(r.wakeTime)+'</div>':'';
+    const memo=r.memo?'<div class="hdiary">「'+escapeHtml(r.memo)+'」</div>':'';
+    const tags=[todLabel(r.tod), ...(r.activity||[]).slice(0,2), ...(r.company||[]).slice(0,1)];
+    if(r.ex)tags.push('🏃 運動'); if(r.al)tags.push('🍶 お酒'); if(r.game)tags.push('🎮 ゲーム');
+    return '<div class="hrow"><div class="hface">'+face(lv,MOODS[lv-1].c)+'</div>'+ 
+      '<div class="hmid"><div class="hd">'+md+'（'+DOWJ[d.getDay()]+'） '+timeFromTs(r.ts)+
+      '<span class="sc">きぶん '+lv+en+fat+'</span></div>'+memo+sleep+
+      '<div class="htags">'+tags.map(t=>'<span class="htag">'+escapeHtml(t)+'</span>').join('')+'</div></div>'+ 
+      '<div class="hactions"><button class="hbtn" data-edit-id="'+escapeHtml(r.id)+'">編集</button></div></div>';
   }).join('');
+  list.querySelectorAll('[data-edit-id]').forEach(b=>b.onclick=()=>openEditRecord(b.dataset.editId));
+}
+function openEditRecord(id){
+  const r=records.find(x=>String(x.id)===String(id)); if(!r)return;
+  document.getElementById('editId').value=r.id;
+  document.getElementById('editDate').value=r.date||TODAY;
+  document.getElementById('editTime').value=timeFromTs(r.ts);
+  document.getElementById('editTod').value=r.tod||'day';
+  document.getElementById('editMood').value=String(clamp(Number(r.mood)||4));
+  document.getElementById('editEnergy').value=r.energy==null?'':String(r.energy);
+  document.getElementById('editFatigue').value=r.fatigue==null?'':String(r.fatigue);
+  document.getElementById('editSleepTime').value=r.sleepTime||'';
+  document.getElementById('editWakeTime').value=r.wakeTime||'';
+  document.getElementById('editExercise').checked=!!r.ex;
+  document.getElementById('editAlcohol').checked=!!r.al;
+  document.getElementById('editGame').checked=!!r.game;
+  document.getElementById('editMemo').value=r.memo||'';
+  document.getElementById('editModal').classList.add('show');
+}
+function closeEditRecord(){document.getElementById('editModal').classList.remove('show');}
+function saveEditRecord(){
+  const id=document.getElementById('editId').value;
+  const r=records.find(x=>String(x.id)===String(id)); if(!r)return;
+  const date=document.getElementById('editDate').value||TODAY;
+  const time=document.getElementById('editTime').value||timeFromTs(r.ts);
+  r.date=date;
+  r.ts=new Date(date+'T'+time+':00').getTime();
+  r.tod=document.getElementById('editTod').value||'day';
+  r.mood=Number(document.getElementById('editMood').value)||4;
+  const en=document.getElementById('editEnergy').value; if(en==='')delete r.energy; else r.energy=Number(en);
+  const ft=document.getElementById('editFatigue').value; if(ft==='')delete r.fatigue; else r.fatigue=Number(ft);
+  const st=document.getElementById('editSleepTime').value, wt=document.getElementById('editWakeTime').value;
+  if(st)r.sleepTime=st; else delete r.sleepTime;
+  if(wt)r.wakeTime=wt; else delete r.wakeTime;
+  r.ex=document.getElementById('editExercise').checked;
+  r.al=document.getElementById('editAlcohol').checked;
+  r.game=document.getElementById('editGame').checked;
+  r.memo=document.getElementById('editMemo').value.trim();
+  saveRecords(); refreshAll(); closeEditRecord(); toast('記録を修正しました');
+}
+function deleteEditRecord(){
+  const id=document.getElementById('editId').value;
+  if(!confirm('この記録を削除しますか？'))return;
+  records=records.filter(x=>String(x.id)!==String(id));
+  saveRecords(); refreshAll(); closeEditRecord(); toast('記録を削除しました');
 }
 
 /* ===================================================================
@@ -1178,7 +1258,7 @@ document.querySelectorAll('.exp[data-exp]').forEach(b=>b.onclick=()=>{
 document.getElementById('importFile').onchange=function(){
   const f=this.files[0];if(!f)return;const rd=new FileReader();
   rd.onload=()=>{try{const arr=JSON.parse(rd.result);if(!Array.isArray(arr))throw 0;
-    records=arr;saveRecords();refreshAll();toast('復元しました（'+arr.length+'件）');
+    records=arr.map((r,i)=>{if(r.id==null)r.id=Date.now()+i;return r;});saveRecords();refreshAll();toast('復元しました（'+records.length+'件）');
   }catch(e){toast('読み込みに失敗しました');}};
   rd.readAsText(f);this.value='';
 };
@@ -1187,6 +1267,11 @@ document.getElementById('dataModal').onclick=e=>{if(e.target.id==='dataModal')e.
 document.getElementById('modalCopy').onclick=()=>{const ta=document.getElementById('modalText');
   ta.select();try{navigator.clipboard.writeText(ta.value);}catch(e){try{document.execCommand('copy');}catch(_){}}
   toast('コピーしました');};
+
+document.getElementById('editClose').onclick=closeEditRecord;
+document.getElementById('editSave').onclick=saveEditRecord;
+document.getElementById('editDelete').onclick=deleteEditRecord;
+document.getElementById('editModal').onclick=e=>{if(e.target.id==='editModal')closeEditRecord();};
 
 /* ---------- navigation ---------- */
 function go(id){
